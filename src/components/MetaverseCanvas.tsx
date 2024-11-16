@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// src/components/MetaverseCanvas.tsx
 import React, { useRef, useEffect, useState } from 'react';
 import { Stage, Layer, Image as KonvaImage } from 'react-konva';
 import officeBackground from '../assets/floor.jpg';
@@ -58,28 +57,25 @@ const MetaverseCanvas: React.FC = () => {
       `ws://localhost:8081/ws?clientId=${senderId}`
     );
 
-    // Set the WebSocket instance
+
     setSocket(socketInstance);
     console.log(socketInstance);
 
-    // Handle WebSocket errors
+
     socketInstance.onerror = (error) => {
       console.error("WebSocket error:", error);
     };
 
-    // Set up continuous message reception
     socketInstance.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      setRoom(message); // Update your state or room data
+      setRoom(message); 
       console.log("Received message:", message);
     };
 
-    // Optionally handle WebSocket connection closure
     socketInstance.onclose = () => {
       console.log("WebSocket connection closed");
     };
 
-    // Optionally handle WebSocket opening
     socketInstance.onopen = () => {
       console.log("WebSocket connection established");
     };
@@ -91,7 +87,6 @@ const MetaverseCanvas: React.FC = () => {
     bgImage.src = officeBackground;
     bgImage.onload = () => {
       backgroundRef.current = bgImage;
-      // Force re-render to display the loaded image
       setImageLoaded(true);
     };
 
@@ -99,7 +94,6 @@ const MetaverseCanvas: React.FC = () => {
     actorImage.src = actor;
     actorImage.onload = () => {
       characterRef.current = actorImage;
-      // Force re-render to display the loaded image
       setImageLoaded(true);
     };
 
@@ -107,20 +101,19 @@ const MetaverseCanvas: React.FC = () => {
     actorImage1.src = actor;
     actorImage1.onload = () => {
       characterRef1.current = actorImage1;
-      // Force re-render to display the loaded image
       setImageLoaded(true);
     };
   }, []);
 
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  const latestRoomRef = useRef(room); // Ref to track the latest room state
+  const latestRoomRef = useRef(room); 
   useEffect(() => {
-    latestRoomRef.current = room; // Update ref with the latest room state
+    latestRoomRef.current = room; 
   }, [room]);
   
   const handleKeyDown = (e: KeyboardEvent) => {
-    if (!senderId) return; // Ensure senderId is valid
+    if (!senderId) return; 
   
     setRoom((prev) => {
       const updatedMembers = prev.members.map((member) => {
@@ -137,7 +130,7 @@ const MetaverseCanvas: React.FC = () => {
         return member;
       });
       if (socket) {
-        socket.send(JSON.stringify({owner:senderId, members:updatedMembers})); // Use the latest state
+        socket.send(JSON.stringify({owner:senderId, members:updatedMembers})); 
       }
       return { owner:senderId, members: updatedMembers };
     });
@@ -149,8 +142,8 @@ const MetaverseCanvas: React.FC = () => {
     const keyDownListener = (e: KeyboardEvent) => handleKeyDown(e);
     window.addEventListener('keydown', keyDownListener);
   
-    return () => window.removeEventListener('keydown', keyDownListener); // Cleanup listener
-  }, [senderId, socket, room]); // Dependencies to re-attach listener
+    return () => window.removeEventListener('keydown', keyDownListener); 
+  }, [senderId, socket, room]); 
 
   return (
     <div className="flex justify-center items-center bg-gray-700 h-screen">
@@ -190,7 +183,7 @@ const MetaverseCanvas: React.FC = () => {
           {
             room.members.map((char) => (
               <KonvaImage
-                key={char.clientId} // Use a unique key, such as clientId
+                key={char.clientId} 
                 x={char.x_axis}
                 y={char.y_axis}
                 radius={CHARACTER_SIZE}
