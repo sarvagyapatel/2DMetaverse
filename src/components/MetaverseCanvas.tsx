@@ -8,6 +8,20 @@ const OFFICE_WIDTH = 900;
 const OFFICE_HEIGHT = 900;
 const CHARACTER_SIZE = 5;
 const MOVE_STEP = 5;
+const distance = 75;
+
+type Member = {
+  clientId: string;
+  status: boolean;
+  x_axis: number;
+  y_axis: number;
+  closeTo: string[]; 
+};
+
+type Office = {
+  owner: string;
+  members: Member[];
+};
 
 const MetaverseCanvas: React.FC = () => {
 
@@ -19,7 +33,7 @@ const MetaverseCanvas: React.FC = () => {
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
 
-  const [room, setRoom] = useState({
+  const [room, setRoom] = useState<Office>({
     owner: '1',
     members: [
       {
@@ -27,24 +41,28 @@ const MetaverseCanvas: React.FC = () => {
         status: true,
         x_axis: OFFICE_WIDTH / 2,
         y_axis: OFFICE_WIDTH / 2,
+        closeTo: []
       },
       {
         clientId: '2',
         status: false,
         x_axis: OFFICE_WIDTH / 2 + 39,
         y_axis: OFFICE_WIDTH / 2 + 39,
+        closeTo: []
       },
       {
         clientId: '3',
         status: true,
-        x_axis: OFFICE_WIDTH / 2 + 45,
+        x_axis: OFFICE_WIDTH / 2 + 45,                                                                                                                                                                 
         y_axis: OFFICE_WIDTH / 2 + 45,
+        closeTo: []
       },
       {
         clientId: '4',
         status: true,
         x_axis: OFFICE_WIDTH / 2 + 50,
         y_axis: OFFICE_WIDTH / 2 + 50,
+        closeTo: []
       },
     ],
   })
@@ -129,13 +147,31 @@ const MetaverseCanvas: React.FC = () => {
         }
         return member;
       });
+
+      // calculating and updating closeTo
+
+      const updatedAllCloseTo = updatedMembers.map((member1) =>{
+          
+        const updatedCloseTo: string[] = [];
+        updatedMembers.forEach((member2) =>{
+           if(member1.clientId!==member2.clientId){
+            const calculatedDistance = Math.round(Math.sqrt(Math.pow(member2.x_axis - member1.x_axis, 2) + Math.pow(member2.y_axis - member1.y_axis, 2)));
+            if(calculatedDistance<=distance){
+              updatedCloseTo.push(member2.clientId);
+            }
+           }
+        })
+        member1.closeTo = updatedCloseTo;
+
+        return member1;
+
+      })
+
       if (socket) {
-        socket.send(JSON.stringify({owner:senderId, members:updatedMembers})); 
+        socket.send(JSON.stringify({owner:senderId, members:updatedAllCloseTo})); 
       }
       return { owner:senderId, members: updatedMembers };
     });
-  
-    
   };
   
   useEffect(() => {
@@ -191,6 +227,8 @@ const MetaverseCanvas: React.FC = () => {
                 width={130}
                 height={130}
                 image={characterRef1.current}
+                shadowColor={char.status?'#00FF00':'#FF0000'}
+
               />
             ))
           }
