@@ -75,7 +75,7 @@ const MetaverseCanvas: React.FC = () => {
     console.log(senderId);
 
     const socketInstance = new WebSocket(
-      `ws://localhost:8080/ws?clientId=${senderId}`
+      `wss://www.vps.sarvagyapatel.in/ws?clientId=${senderId}`
     );
 
     if (socketInstance) {

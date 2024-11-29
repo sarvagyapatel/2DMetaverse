@@ -97,7 +97,7 @@ function TwoWay(prop: Props) {
             return;
         }
 
-        const socketInstance = new WebSocket(`ws://localhost:8080/ws?clientId=${senderId}`);
+        const socketInstance = new WebSocket(`wss://www.vps.sarvagyapatel.in/ws?clientId=${senderId}`);
         setSocket(socketInstance);
 
         socketInstance.onerror = (error) => {
