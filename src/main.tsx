@@ -5,12 +5,18 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import MetaverseCanvas from './components/MetaverseCanvas.tsx'
 import LogIn from './components/LogIn.tsx'
 import SignUp from './components/SignUp.tsx'
+import Home from './components/Home.tsx'
+import CreateRoom from './components/CreateRoom.tsx'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
     children: [
+      {
+        path: '/',
+        element: <Home />
+      },
       {
         path: '/room',
         element: <MetaverseCanvas />
@@ -22,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: '/signup',
         element: <SignUp />
+      },
+      {
+        path: '/createroom',
+        element: <CreateRoom />
       }
     ]
   }

@@ -2,56 +2,73 @@
 import { useForm } from "react-hook-form";
 import { User } from "../types/user.types";
 import { userLogin } from "../services/auth.services";
+import { useNavigate } from "react-router-dom";
 
 function LogIn() {
     const { register, handleSubmit } = useForm<User>();
+    const navigate = useNavigate();
 
     const onSubmit = async (data: User) => {
         try {
             const response = await userLogin(data);
             console.log(response)
+            navigate('/room')
         } catch (err) {
             console.log(err)
         }
     };
 
     return (
-        <div className="h-full w-full bg-slate-950 [&>div]:absolute [&>div]:inset-0 [&>div]:bg-[radial-gradient(circle_500px_at_50%_200px,#3e3e3e,transparent)]">
-            <div className="w-full h-full flex justify-center items-center ">
-                <div className="w-full max-w-md mx-auto p-16 rounded-3xl shadow-2xl bg-white text-gray-800 mt-8">
-                    <h2 className="text-2xl font-bold text-center text-black">
-                      Sign in to your account
-                    </h2>
-                    <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-5">
-                        <input
-                            placeholder="Enter your email address" 
-                            type="email"
-                            className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
-                            {...register("email", {
-                                required: true,
-                                validate: {
-                                    matchPattern: (value) =>
-                                        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
-                                        "Email address must be valid",
-                                },
-                            })}
-                        />
-                        <input
-                            placeholder="Enter password"
-                            type="password"
-                            className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
-                            {...register("password", { required: true })}
-                        />
-                        <button
-                            type="submit"
-                            className="w-full px-4 py-2 text-white bg-blue-700 hover:bg-blue-800 font-semibold rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        >
-                            SignIn
-                        </button>
-                    </form>
+        <div className="w-full max-w-md mx-auto p-8 md:p-16 rounded-3xl shadow-xl bg-white text-gray-800 mt-12">
+            <h2 className="text-3xl font-extrabold text-center text-gray-900">
+                Sign in to your account
+            </h2>
+            <p className="text-center text-gray-500 mt-2">
+                Welcome back! Please enter your credentials.
+            </p>
+
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
+                <div className="flex flex-col space-y-4">
+                    <input
+                        placeholder="Enter your email address"
+                        type="email"
+                        className="w-full px-5 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        {...register("email", {
+                            required: true,
+                            validate: {
+                                matchPattern: (value) =>
+                                    /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+                                    "Email address must be valid",
+                            },
+                        })}
+                    />
+                    <input
+                        placeholder="Enter password"
+                        type="password"
+                        className="w-full px-5 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        {...register("password", { required: true })}
+                    />
                 </div>
-            </div>
+
+                <button
+                    type="submit"
+                    className="w-full px-6 py-3 text-white bg-blue-700 hover:bg-blue-800 font-bold rounded-xl shadow-lg transition duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                >
+                    Sign In
+                </button>
+            </form>
+
+            <p className="text-sm text-gray-400 text-center mt-6">
+                Don't have an account?{" "}
+                <a
+                    href="#"
+                    className="text-blue-600 font-semibold hover:underline"
+                >
+                    Sign up
+                </a>
+            </p>
         </div>
+
     )
 }
 export default LogIn

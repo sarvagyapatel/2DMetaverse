@@ -38,7 +38,7 @@ export const getCurrentUser = async()=>{
     }
 }
 
-export const updateUser = async(data:User)=>{
+export const updateUser = async(data:unknown)=>{
     try {
         const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/v1/users/updateuser`, data, {withCredentials: true});
         return response.data;
