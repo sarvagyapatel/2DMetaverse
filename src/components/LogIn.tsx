@@ -1,18 +1,25 @@
-
 import { useForm } from "react-hook-form";
 import { User } from "../types/user.types";
 import { userLogin } from "../services/auth.services";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { RingLoader } from "react-spinners";
 
 function LogIn() {
     const { register, handleSubmit } = useForm<User>();
     const navigate = useNavigate();
+    const [isloding, setIsloading] = useState<boolean>(false);
 
     const onSubmit = async (data: User) => {
         try {
+            setIsloading(true);
             const response = await userLogin(data);
-            console.log(response)
-            navigate('/room')
+            setIsloading(false);
+            if(response.user.roomId){
+                navigate('/room')
+            }else{
+                navigate('/createroom')
+            }
         } catch (err) {
             console.log(err)
         }
@@ -54,14 +61,19 @@ function LogIn() {
                     type="submit"
                     className="w-full px-6 py-3 text-white bg-blue-700 hover:bg-blue-800 font-bold rounded-xl shadow-lg transition duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-blue-600"
                 >
-                    Sign In
+                    {isloding?(
+                        <RingLoader
+                        color="white"
+                        size={19}
+                      />
+                    ):("Sign In")}
                 </button>
             </form>
 
             <p className="text-sm text-gray-400 text-center mt-6">
                 Don't have an account?{" "}
                 <a
-                    href="#"
+                    href="/signup"
                     className="text-blue-600 font-semibold hover:underline"
                 >
                     Sign up

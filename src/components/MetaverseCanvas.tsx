@@ -5,6 +5,7 @@ import actor from '../assets/actor.png';
 import TwoWay from './TwoWay';
 import { getCurrentUser, updateUser } from '../services/auth.services';
 import { RingLoader } from 'react-spinners';
+import { RoomChat } from './RoomChat';
 
 const OFFICE_WIDTH = window.innerWidth - 230;
 const OFFICE_HEIGHT = window.innerHeight - 230;
@@ -65,7 +66,7 @@ const MetaverseCanvas: React.FC = () => {
 
 
     const socketInstance = new WebSocket(
-      `ws://localhost:8080/ws?username=${hostTemp.username}`
+      `ws://localhost:8080/ws?username=${hostTemp.username}&roomId=${hostTemp.roomId}`
     );
 
     setSocket(socketInstance);
@@ -77,6 +78,7 @@ const MetaverseCanvas: React.FC = () => {
 
     socketInstance.onmessage = (event) => {
       const message = JSON.parse(event.data);
+      if (message.type === "liveChat") return;
       setRoom((prev) => {
         const updatedRoom = prev?.filter((member) => member.username !== message.username) || [];
         return [...updatedRoom, message];
@@ -96,33 +98,34 @@ const MetaverseCanvas: React.FC = () => {
 
   const [imageLoaded, setImageLoaded] = useState(false);
   const handleKeyDown = (e: KeyboardEvent) => {
-    if (host !== null) {
-      if (!host.username) return;
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      if (host !== null) {
+        if (!host.username) return;
 
-      setHost((prev): Member | null => {
-        if (prev !== null) {
-          let { x_axis, y_axis } = prev;
+        setHost((prev): Member | null => {
+          if (prev !== null) {
+            let { x_axis, y_axis } = prev;
 
-          if (e.key === 'ArrowUp') y_axis = Math.max(y_axis - MOVE_STEP, CHARACTER_SIZE);
-          if (e.key === 'ArrowDown') y_axis = Math.min(y_axis + MOVE_STEP, OFFICE_HEIGHT - CHARACTER_SIZE);
-          if (e.key === 'ArrowLeft') x_axis = Math.max(x_axis - MOVE_STEP, CHARACTER_SIZE);
-          if (e.key === 'ArrowRight') x_axis = Math.min(x_axis + MOVE_STEP, OFFICE_WIDTH - CHARACTER_SIZE);
+            if (e.key === 'ArrowUp') y_axis = Math.max(y_axis - MOVE_STEP, CHARACTER_SIZE);
+            if (e.key === 'ArrowDown') y_axis = Math.min(y_axis + MOVE_STEP, OFFICE_HEIGHT - CHARACTER_SIZE);
+            if (e.key === 'ArrowLeft') x_axis = Math.max(x_axis - MOVE_STEP, CHARACTER_SIZE);
+            if (e.key === 'ArrowRight') x_axis = Math.min(x_axis + MOVE_STEP, OFFICE_WIDTH - CHARACTER_SIZE);
 
-          const sendData = {
-            ...prev,
-            x_axis,
-            y_axis,
-          };
+            const sendData = {
+              ...prev,
+              x_axis,
+              y_axis,
+            };
 
-          if (socket) {
-            socket.send(JSON.stringify(sendData));
+            if (socket) {
+              socket.send(JSON.stringify(sendData));
+            }
+            return { ...prev, x_axis, y_axis };
           }
-          return { ...prev, x_axis, y_axis };
-        }
-        return null;
-      });
+          return null;
+        });
+      }
     }
-
   };
 
   const calculateClosetMate = () => {
@@ -222,13 +225,13 @@ const MetaverseCanvas: React.FC = () => {
                   />
                   <Text
                     text={host.username}
-                    x={host.x_axis+67}
+                    x={host.x_axis + 67}
                     y={host.y_axis - 10}
                     fontSize={18}
                     fontFamily="Arial"
                     fill="black"
                     fontStyle='bold'
-                    offsetX={(host.username.length * 8) / 2} 
+                    offsetX={(host.username.length * 8) / 2}
                   />
                 </div>
               ) : null}
@@ -252,7 +255,8 @@ const MetaverseCanvas: React.FC = () => {
                     fontFamily="Arial"
                     fill="black"
                     fontStyle='bold'
-                    offsetX={(char.username.length * 8) / 2} /></>
+                    offsetX={(char.username.length * 8) / 2} />
+                </>
               ))}
             </Layer>
           </Stage>
@@ -264,9 +268,17 @@ const MetaverseCanvas: React.FC = () => {
                 size={(window.innerHeight) / 6}
                 loading
               />
-              <h1 className='text-2xl font-semibold text-slate-950 opacity-65'>Loading lobby...</h1>
+              <h1 className='text-2xl font-semibold text-slate-950 opacity-65'>Loading lobby</h1>
             </div>
           )}
+
+          {
+            host === null || socket === null ? ("") : (
+              <div className="absolute bottom-0 right-0 transform -translate-x-1/2 -translate-y-1/2 flex flex-col gap-4 items-center justify-center">
+                <RoomChat username={host.username} socket={socket} roomId={host.roomId} />
+              </div>
+            )
+          }
         </div>
 
       </div>
