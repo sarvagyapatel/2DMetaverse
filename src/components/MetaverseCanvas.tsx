@@ -67,7 +67,7 @@ const MetaverseCanvas: React.FC = () => {
 
 
     const socketInstance = new WebSocket(
-      `${import.meta.env.VITE_WS_URL}}/ws?username=${hostTemp.username}&roomId=${hostTemp.roomId}`
+      `${import.meta.env.VITE_WS_URL}/ws?username=${hostTemp.username}&roomId=${hostTemp.roomId}`
     );
 
     setSocket(socketInstance);
