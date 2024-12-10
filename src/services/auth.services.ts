@@ -59,7 +59,7 @@ export const updateUser = async (data: unknown) => {
             data,
             {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer${token}`,
                 },
             }
         );
