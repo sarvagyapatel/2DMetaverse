@@ -21,7 +21,7 @@ export const userLogin = async (data: User) => {
         return response.data;
     } catch (error) {
         console.error("Login failed", error);
-        throw error;
+        return error;
     }
 };
 
@@ -40,14 +40,13 @@ export const getCurrentUser = async () => {
 
         const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/v1/users/currentuser`, {
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer${token}`,
             },
         });
-
         return response.data;
     } catch (error) {
         console.error("Failed to fetch current user", error);
-        throw error;
+        return error;
     }
 };
 
