@@ -38,6 +38,7 @@ const MetaverseCanvas: React.FC = () => {
 
   const currentUser = async () => {
     const response = await getCurrentUser();
+    console.log(response)
     setHost(response)
     connect(response);
   }

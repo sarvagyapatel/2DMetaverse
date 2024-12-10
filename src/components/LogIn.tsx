@@ -14,6 +14,7 @@ function LogIn() {
         try {
             setIsloading(true);
             const response = await userLogin(data);
+            console.log(response);
             setIsloading(false);
             if(response.user.roomId){
                 navigate('/room')
