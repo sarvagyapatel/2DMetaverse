@@ -3,8 +3,12 @@ import { Room } from "../types/user.types"
 
 export const createRoom = async(data: Room)=>{
     try {
-        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/v1/room/createroom`, data, {withCredentials: true});
-        console.log(response)
+        const token = localStorage.getItem("auth_token");
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/v1/room/createroom`, data, {
+            headers: {
+                Authorization: `Bearer${token}`,
+            },
+        });
         return response.data;
     } catch (error) {
         return error;
@@ -22,7 +26,12 @@ export const getAllRooms = async()=>{
 
 export const joinRoom = async(data: Room)=>{
     try {
-        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/v1/room/joinroom`, data, {withCredentials: true});
+        const token = localStorage.getItem("auth_token");
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/v1/room/joinroom`, data, {
+            headers: {
+                Authorization: `Bearer${token}`,
+            },
+        });
         return response.data;
     } catch (error) {
         return error;

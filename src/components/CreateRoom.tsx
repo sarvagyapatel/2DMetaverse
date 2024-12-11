@@ -4,9 +4,10 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { createRoom, getAllRooms, joinRoom } from '../services/room.services';
 import { Room } from '../types/user.types';
 import { useNavigate } from 'react-router-dom';
+import { RingLoader } from 'react-spinners';
 
 interface RoomSearchForm {
-  roomName :string;
+  roomName: string;
   accessKey: string;
 }
 
@@ -21,6 +22,9 @@ const CreateRoom = () => {
   const [filteredRooms, setFilteredRooms] = useState<Room[] | null>(null);
   const [visibility, setVisibility] = useState<string>("hidden")
   const navigate = useNavigate();
+  const [isloding, setIsloading] = useState<boolean>(false);
+  const [islodingJoin, setIsloadingJoin] = useState<boolean>(false);
+
 
   useEffect(() => {
     (async function () {
@@ -36,15 +40,18 @@ const CreateRoom = () => {
 
   const onSearchSubmit: SubmitHandler<RoomSearchForm> = async (data) => {
     data.roomName = searchQuery as string;
+    setIsloadingJoin(true);
     await joinRoom(data);
+    setIsloadingJoin(false);
     navigate('/room')
   };
 
   const onCreateRoomSubmit: SubmitHandler<CreateRoomForm> = async (data) => {
     console.log('Creating room:', data.roomName, 'with access key:', data.accessKey);
     try {
-      const response = await createRoom(data);
-      console.log(response)
+      setIsloading(true);
+      await createRoom(data);
+      setIsloading(false);
     } catch (err) {
       console.log(err)
     }
@@ -58,7 +65,7 @@ const CreateRoom = () => {
     setFilteredRooms(filteredRooms)
     console.log(filteredRooms)
   }, [searchQuery])
-  
+
 
   const joinRoomName = async (roomName: string) => {
     setVisibility("visible")
@@ -90,9 +97,14 @@ const CreateRoom = () => {
             />
             <button
               type="submit"
-              className="w-full px-6 py-3 text-white bg-blue-700 hover:bg-blue-800 font-semibold rounded-xl shadow-xl transition duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="flex justify-center items-center w-full px-6 py-3 text-white bg-blue-700 hover:bg-blue-800 font-semibold rounded-xl shadow-xl transition duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-blue-600"
             >
-              Join Room
+              {islodingJoin ? (
+                <RingLoader
+                  color="white"
+                  size={19}
+                />
+              ) : ("Join Room")}
             </button>
           </div>
         </form>
@@ -142,9 +154,14 @@ const CreateRoom = () => {
           />
           <button
             type="submit"
-            className="w-full px-6 py-3 text-white bg-blue-700 hover:bg-blue-800 font-semibold rounded-xl shadow-xl transition duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className="flex justify-center items-center w-full px-6 py-3 text-white bg-blue-700 hover:bg-blue-800 font-semibold rounded-xl shadow-xl transition duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-blue-600"
           >
-            Create Room
+            {isloding ? (
+              <RingLoader
+                color="white"
+                size={19}
+              />
+            ) : ("Create Room")}
           </button>
         </form>
       </div>
