@@ -190,7 +190,7 @@ const MetaverseCanvas: React.FC = () => {
       <div className="relative flex flex-col w-full justify-center items-centermax-h-screen min-h-screen ">
         <div className="flex gap-10">
           <div className='flex absolute top-0 z-20'>
-            {webRtcClient && host ? <TwoWay sender={host.username} receiver={webRtcClient} connection={webRtcClient ? true : false} /> : ""}
+            {webRtcClient && host ? <TwoWay sender={host.username} receiver={webRtcClient} roomId={host.roomId} connection={webRtcClient ? true : false} /> : ""}
           </div>
         </div>
         <div className="flex h-screen w-full flex-col justify-end items-center mb-8 relative">

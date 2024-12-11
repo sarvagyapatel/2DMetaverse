@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 type Props = {
     sender: string,
     receiver: string,
+    roomId: number,
     connection: boolean
 }
 
@@ -97,7 +98,7 @@ function TwoWay(prop: Props) {
             return;
         }
 
-        const socketInstance = new WebSocket(`wss://www.vps.sarvagyapatel.in/ws?clientId=${senderId}`);
+        const socketInstance = new WebSocket(`${import.meta.env.VITE_WS_URL}/ws?username=${senderId}&roomId=${prop.roomId}`);
         setSocket(socketInstance);
 
         socketInstance.onerror = (error) => {
