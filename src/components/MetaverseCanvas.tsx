@@ -11,7 +11,7 @@ const OFFICE_WIDTH = window.innerWidth - 230;
 const OFFICE_HEIGHT = window.innerHeight - 230;
 const CHARACTER_SIZE = 3;
 const MOVE_STEP = 5;
-const distance = 45;
+const distance = 65;
 
 type Member = {
   id?: number,
