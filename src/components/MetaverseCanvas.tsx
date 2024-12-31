@@ -38,14 +38,12 @@ const MetaverseCanvas: React.FC = () => {
 
   const currentUser = async () => {
     const response = await getCurrentUser();
-    console.log(response)
     setHost(response)
     connect(response);
   }
 
   const updateUserCoordinates = async (coordinates: unknown) => {
     await updateUser(coordinates);
-    console.log("YES")
   }
 
   useEffect(() => {
@@ -54,14 +52,11 @@ const MetaverseCanvas: React.FC = () => {
 
 
   const connect = async (hostTemp: Member) => {
-    console.log(hostTemp.username);
 
     const sendMessage = () => {
       if (socketInstance.readyState === WebSocket.OPEN) {
-        console.log("Sending data:", hostTemp);
         socketInstance.send(JSON.stringify(hostTemp));
       } else {
-        console.log("WebSocket is not ready yet.");
       }
     };
 
@@ -71,7 +66,6 @@ const MetaverseCanvas: React.FC = () => {
     );
 
     setSocket(socketInstance);
-    console.log(socketInstance);
 
     socketInstance.onerror = (error) => {
       console.error("WebSocket error:", error);
@@ -84,7 +78,6 @@ const MetaverseCanvas: React.FC = () => {
         const updatedRoom = prev?.filter((member) => member.username !== message.username) || [];
         return [...updatedRoom, message];
       });
-      console.log("Received message:", message);
     };
 
     socketInstance.onclose = () => {

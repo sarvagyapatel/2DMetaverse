@@ -30,7 +30,6 @@ const CreateRoom = () => {
     (async function () {
       const response = await getAllRooms();
       setRooms(response)
-      console.log(response)
     })()
   }, [])
 
@@ -47,7 +46,6 @@ const CreateRoom = () => {
   };
 
   const onCreateRoomSubmit: SubmitHandler<CreateRoomForm> = async (data) => {
-    console.log('Creating room:', data.roomName, 'with access key:', data.accessKey);
     try {
       setIsloading(true);
       await createRoom(data);
@@ -63,7 +61,6 @@ const CreateRoom = () => {
       room.roomName.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredRooms(filteredRooms)
-    console.log(filteredRooms)
   }, [searchQuery])
 
 

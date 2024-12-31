@@ -10,13 +10,12 @@ function Home() {
 
   const currentUser = async () => {
     const response = await getCurrentUser();
-    console.log(response)
     setHost(response)
   }
 
   const logout = async ()=>{
     await userLogout();
-    setHost(null)
+    currentUser();
   }
 
   useEffect(() => {
@@ -37,9 +36,9 @@ function Home() {
         : (
           <div className='w-full h-full flex flex-col '>
             <div className='w-full h-[20vh] float-start text-white justify-end items-end'>
-              <h1 className='float-end p-4 font-semibold text-xl'>{host.username === null ? (
+              <h1 className='float-end p-4 font-semibold text-xl'>{host.status.toString() === '401' ? (
                 <Link to='/login'>
-                  Login
+                  <button>Login</button>
                 </Link>
               ) : (
                 <button onClick={logout}>Logout</button>
