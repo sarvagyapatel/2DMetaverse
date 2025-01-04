@@ -56,8 +56,7 @@ const MetaverseCanvas: React.FC = () => {
     const sendMessage = () => {
       if (socketInstance.readyState === WebSocket.OPEN) {
         socketInstance.send(JSON.stringify(hostTemp));
-      } else {
-      }
+      } 
     };
 
 
